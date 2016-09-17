@@ -3,7 +3,7 @@ FileSystem::Capacity
 
 Provides filesystem capacity info from the operating system utils and tools.
 
-Currently implements Linux filesystem info provided by df command.
+Currently implements GNU/Linux filesystem info provided by df command from coreutils.
 
 ## Example Usage ##
     use v6;
@@ -19,3 +19,8 @@ Currently implements Linux filesystem info provided by df command.
       say "Free: " ~ $data<free>;
       say "---";
     }
+
+## TODO ##
+
+* Implement Windows version from wmic command
+* Provide other size scales like GB, MB, etc.
