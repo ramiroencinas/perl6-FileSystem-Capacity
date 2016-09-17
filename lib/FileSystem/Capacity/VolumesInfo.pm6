@@ -4,8 +4,8 @@ unit module Filesystem::Capacity::VolumesInfo;
 
 sub volumes-info is export {
   given $*KERNEL {
-    when $_ ~~ /linux/ { return linux; }
-    when $_ ~~ /win32/ { return win32; }
+    when /linux/ { linux; }
+    when /win32/ { win32; }
   }
 }
 
@@ -15,7 +15,7 @@ sub linux {
   my %ret;
 
   for @df-output {
-    my @line = $_.split(/\s+/);
+    my @line = $_.words;
 
     %ret{@line[5]} = {
       'size'  => @line[1],
