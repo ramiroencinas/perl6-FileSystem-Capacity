@@ -1,5 +1,5 @@
-FileSystem::Capacity
-====================
+FileSystem::Capacity::VolumesInfo
+=================================
 
 Provides filesystem capacity info from the operating system utils and tools.
 
