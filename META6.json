@@ -1,0 +1,12 @@
+{
+        "perl" : "6.c",
+        "name" : "FileSystem::Capacity",
+        "version" : "*",
+        "description" : "Provides filesystem capacity info from the operating system utils and tools.",
+        "authors" : [ "Ramiro Encinas Alarza" ],
+        "provides" : {
+            "FileSystem::Capacity" : "lib/FileSystem/Capacity/VolumesInfo.pm6"
+        },
+        "depends" : [ "df command from GNU coreutils" ],
+        "source-url" : "git@github.com:ramiroencinas/perl6-FileSystem-Capacity.git"
+    }
