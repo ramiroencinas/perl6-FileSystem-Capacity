@@ -7,6 +7,8 @@ Currently implements GNU/Linux filesystem info provided by df command from coreu
 
 ## Example Usage ##
     use v6;
+
+    use lib 'lib';
     use FileSystem::Capacity::VolumesInfo;
 
     my %m = volumes-info();
