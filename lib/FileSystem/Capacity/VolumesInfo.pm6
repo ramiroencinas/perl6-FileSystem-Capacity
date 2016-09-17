@@ -3,9 +3,9 @@ use v6;
 unit module Filesystem::Capacity::VolumesInfo;
 
 sub volumes-info is export {
-
   given $*KERNEL {
     when $_ ~~ /linux/ { return linux; }
+    when $_ ~~ /win32/ { return win32; }
   }
 }
 
@@ -23,6 +23,32 @@ sub linux {
       'used%' => @line[4],
       'free'  => @line[3]
     };
+  }
+
+  return %ret;
+}
+
+sub win32 {
+  my @wmic-output = ((shell "wmic /node:'%COMPUTERNAME%' LogicalDisk Where DriveType='3' Get DeviceID,Size,FreeSpace", :out).out.slurp-rest).lines;
+  @wmic-output.shift;
+  my %ret;
+
+  for @wmic-output {
+    if $_ {
+      my @line = $_.split(/\s+/);
+
+      my $size = @line[2];
+      my $free = @line[1];
+      my $used = $size - $free;
+      my $used-percent = (($used * 100) / $size).Int ~ "%";
+
+      %ret{@line[0]} = {
+        'size'  => $size,
+        'used'  => $used,
+        'used%' => $used-percent,
+        'free'  => $free
+      };
+    }
   }
 
   return %ret;

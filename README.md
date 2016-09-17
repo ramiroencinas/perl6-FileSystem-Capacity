@@ -3,7 +3,9 @@ FileSystem::Capacity
 
 Provides filesystem capacity info from the operating system utils and tools.
 
-Currently implements GNU/Linux filesystem info provided by df command from coreutils.
+Currently implements:
+* GNU/Linux filesystem info provided by df command from coreutils.
+* Win32 filesystem info provided by wmic command.
 
 ## Example Usage ##
     use v6;
@@ -24,5 +26,4 @@ Currently implements GNU/Linux filesystem info provided by df command from coreu
 
 ## TODO ##
 
-* Implement Windows version from wmic command
 * Provide other size scales like GB, MB, etc.
