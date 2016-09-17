@@ -7,9 +7,6 @@
   "provides" : {
     "FileSystem::Capacity::VolumesInfo" : "lib/FileSystem/Capacity/VolumesInfo.pm6"
   },
-  "depends" : [
-    [ "df command from GNU coreutils" ],
-    [ "wmic form win32" ] 
-  ],
+  "depends" : [ ],
   "source-url" : "git@github.com:ramiroencinas/perl6-FileSystem-Capacity.git"
 }
