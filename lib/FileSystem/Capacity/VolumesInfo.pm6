@@ -35,7 +35,7 @@ sub win32 {
 
   for @wmic-output {
     if $_ {
-      my @line = $_.split(/\s+/);
+      my @line = $_.words;
 
       my $size = @line[2];
       my $free = @line[1];
