@@ -1,6 +1,4 @@
 use v6;
-
-use lib 'lib';
 use FileSystem::Capacity::VolumesInfo;
 
 my %vols = volumes-info();

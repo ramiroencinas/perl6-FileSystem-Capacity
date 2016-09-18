@@ -7,10 +7,15 @@ Currently implements:
 * GNU/Linux filesystem info provided by df command from coreutils.
 * Win32 filesystem info provided by wmic command.
 
+## Installing the module ##
+
+    panda update
+    panda --notests install FileSystem::Capacity::VolumesInfo
+
+    (I will resolve the travis test stuff to avoid --notests)
+
 ## Example Usage ##
     use v6;
-
-    use lib 'lib';
     use FileSystem::Capacity::VolumesInfo;
 
     my %vols = volumes-info();
