@@ -6,6 +6,7 @@ Provides filesystem capacity info from the operating system utils and tools.
 Currently implements:
 * GNU/Linux filesystem info provided by df command from coreutils.
 * Win32 filesystem info provided by wmic command.
+* OS X filesystem info provided by df command.
 
 ## Installing the module ##
 

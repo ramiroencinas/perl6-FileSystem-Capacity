@@ -4,8 +4,9 @@ unit module Filesystem::Capacity::VolumesInfo;
 
 sub volumes-info is export {
   given $*KERNEL {
-    when /linux/ { linux; }
-    when /win32/ { win32; }
+    when /linux/  { linux; }
+    when /win32/  { win32; }
+    when /darwin/ { osx; }
   }
 }
 
@@ -49,6 +50,25 @@ sub win32 {
         'free'  => $free
       };
     }
+  }
+
+  return %ret;
+}
+
+sub osx {
+  my @df-output = ((run 'df', '-k', :out).out.slurp-rest).lines;
+  @df-output.shift;
+  my %ret;
+
+  for @df-output {
+    my @line = $_.words;
+
+    %ret{@line[8]} = {
+      'size'  => @line[1],
+      'used'  => @line[2],
+      'used%' => @line[4],
+      'free'  => @line[3]
+    };
   }
 
   return %ret;
