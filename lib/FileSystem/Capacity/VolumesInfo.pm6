@@ -47,13 +47,13 @@ sub win32 ( $human? ) {
     if $_ {
       my @line = $_.words;
 
-      my $size = @line[2];
-      my $free = @line[1];
-      my $used = $size - $free;
+      my $size = @line[2].Int;
+      my $free = @line[1].Int;
+      my $used = ($size - $free);
       my $used-percent = (($used * 100) / $size).Int ~ "%";
 
       with $human {
-        %ret{@line[8]} = {
+        %ret{@line[0]} = {
           'size'  => byte-to-human($size),
           'used'  => byte-to-human($used),
           'used%' => $used-percent,
