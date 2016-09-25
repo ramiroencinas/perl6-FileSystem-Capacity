@@ -36,7 +36,7 @@ Currently implements:
 
     say "Human version:\n";
 
-    my %vols-human = volumes-info("human");
+    my %vols-human = volumes-info(:human);
 
     for %vols-human.sort(*.key)>>.kv -> ($location, $data) {
       say "Location: $location";

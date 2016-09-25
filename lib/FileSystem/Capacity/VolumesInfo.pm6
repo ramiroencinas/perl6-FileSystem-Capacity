@@ -2,70 +2,19 @@ use v6;
 
 unit module Filesystem::Capacity::VolumesInfo;
 
-sub volumes-info ( $human? ) is export {
+sub volumes-info ( Bool :$human = False ) is export {
+  my %ret;
+  
   given $*KERNEL {
-    when /linux/  { with $human { linux($human) } else { linux }; }
-    when /win32/  { with $human { win32($human) } else { win32 }; }
-    when /darwin/ { with $human { osx($human) } else { osx }; }
+    when /linux/  { %ret = linux() }
+    when /win32/  { %ret = win32() }
+    when /darwin/ { %ret = macos() }
   }
-}
-
-sub linux ( $human? ) {
-  my @df-output = ((run 'df', '-k', :out).out.slurp-rest).lines;
-  @df-output.shift;
-  my %ret;
-
-  for @df-output {
-    my @line = $_.words;
-
-    with $human {
-      %ret{@line[5]} = {
-        'size'  => byte-to-human(@line[1].Int * 1024),
-        'used'  => byte-to-human(@line[2].Int * 1024),
-        'used%' => @line[4],
-        'free'  => byte-to-human(@line[3].Int * 1024)
-      };
-    } else {
-      %ret{@line[5]} = {
-        'size'  => @line[1].Int * 1024,
-        'used'  => @line[2].Int * 1024,
-        'used%' => @line[4],
-        'free'  => @line[3].Int * 1024
-      };
-    }
-  }
-
-  return %ret;
-}
-
-sub win32 ( $human? ) {
-  my @wmic-output = ((shell "wmic /node:'%COMPUTERNAME%' LogicalDisk Where DriveType='3' Get DeviceID,Size,FreeSpace", :out).out.slurp-rest).lines;
-  @wmic-output.shift;
-  my %ret;
-
-  for @wmic-output {
-    if $_ {
-      my @line = $_.words;
-
-      my $size = @line[2].Int;
-      my $free = @line[1].Int;
-      my $used = ($size - $free);
-      my $used-percent = (($used * 100) / $size).Int ~ "%";
-
-      with $human {
-        %ret{@line[0]} = {
-          'size'  => byte-to-human($size),
-          'used'  => byte-to-human($used),
-          'used%' => $used-percent,
-          'free'  => byte-to-human($free)
-        };
-      } else {
-        %ret{@line[0]} = {
-          'size'  => $size,
-          'used'  => $used,
-          'used%' => $used-percent,
-          'free'  => $free
-        };
+  
+  if $human {
+    for %ret.values -> $sizes {
+      for $sizes{'size', 'used', 'free'} -> $size is rw {
+        $size = byte-to-human($size);
       }
     }
   }
@@ -73,32 +22,85 @@ sub win32 ( $human? ) {
   return %ret;
 }
 
-sub osx ( $human? ) {
+sub linux ( ) {
   my @df-output = ((run 'df', '-k', :out).out.slurp-rest).lines;
   @df-output.shift;
-  my %ret;
 
-  for @df-output {
+  return gather for @df-output {
     my @line = $_.words;
 
-    with $human {
-      %ret{@line[8]} = {
-        'size'  => byte-to-human(@line[1].Int * 1024),
-        'used'  => byte-to-human(@line[2].Int * 1024),
-        'used%' => @line[4],
-        'free'  => byte-to-human(@line[3].Int * 1024)
-      };
-    } else {
-      %ret{@line[8]} = {
-        'size'  => @line[1].Int * 1024,
-        'used'  => @line[2].Int * 1024,
-        'used%' => @line[4],
-        'free'  => @line[3].Int * 1024
-      };
-    }
+    take @line[5] => {
+      'size'  => @line[1].Int * 1024,
+      'used'  => @line[2].Int * 1024,
+      'used%' => @line[4],
+      'free'  => @line[3].Int * 1024
+    };
   }
+}
 
-  return %ret;
+sub win32 ( ) {
+  my @wmic-output = ((shell "wmic /node:'%COMPUTERNAME%' LogicalDisk Where DriveType='3' Get DeviceID,Size,FreeSpace", :out).out.slurp-rest).lines;
+  @wmic-output.shift;
+
+  return gather for @wmic-output {
+    next unless $_;
+    my @line = $_.words;
+
+    my $size = @line[2].Int;
+    my $free = @line[1].Int;
+    my $used = ($size - $free);
+    my $used-percent = (($used * 100) / $size).Int ~ "%";
+
+    take @line[0] => {
+      'size'  => $size,
+      'used'  => $used,
+      'used%' => $used-percent,
+      'free'  => $free
+    };
+  }
+}
+
+sub macos ( ) {
+
+  # get df output using 1024 bytes blocks and without inode stats
+  my @df-output = run('df', '-k', '-P', :out).out.lines;
+  
+  # parse header to find position of each column
+  my $header = @df-output.shift ~~ /^
+      'Filesystem'
+      \s+
+      $<size>='1024-blocks'
+      \s+
+      $<used>='Used'
+      \s+
+      $<free>='Available'
+      \s+
+      $<used%>='Capacity'
+      \s+
+      $<location>='Mounted on'
+  $/ or fail 'Cannot parse df output header.';
+  
+  # extract data from each column according to its alignment
+  return gather for @df-output {
+    my $volume = $_ ~~ /
+        $<size>=\d+ <.at($header<size>.to)>
+        \s+
+        $<used>=\d+ <.at($header<used>.to)>
+        \s+
+        $<free>=\d+ <.at($header<free>.to)>
+        \s+
+        <.at($header<used%>.from)> \s* $<used%>=(\d+ '%') \s* <.at($header<used%>.to)>
+        \s+
+        <.at($header<location>.from)> $<location>=(.*)
+    $/ or fail 'Cannot parse df output volume.';
+    
+    take $volume{'location'} => {
+      'size'  => $volume{'size'}.Int * 1024,
+      'used'  => $volume{'used'}.Int * 1024,
+      'used%' => $volume{'used%'}.Str,
+      'free'  => $volume{'free'}.Int * 1024
+    };
+  }
 }
 
 sub byte-to-human( Int:D $bytes ) is export {
@@ -115,5 +117,4 @@ sub byte-to-human( Int:D $bytes ) is export {
 	}
 
 	return $b.round(0.10) ~ " " ~ @scale[$i];
-
 }
