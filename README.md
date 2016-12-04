@@ -1,9 +1,6 @@
 # FileSystem::Capacity::VolumesInfo
 [![Build Status](https://travis-ci.org/ramiroencinas/perl6-FileSystem-Capacity.svg?branch=master)](https://travis-ci.org/ramiroencinas/perl6-FileSystem-Capacity)
 
-FileSystem::Capacity::VolumesInfo
-=================================
-
 Provides filesystem capacity info in bytes or human format from operating system utils and tools.
 
 Currently implements:
