@@ -1,3 +1,6 @@
+# FileSystem::Capacity::VolumesInfo
+[![Build Status](https://travis-ci.org/ramiroencinas/perl6-FileSystem-Capacity.svg?branch=master)](https://travis-ci.org/ramiroencinas/perl6-FileSystem-Capacity)
+
 FileSystem::Capacity::VolumesInfo
 =================================
 
@@ -11,9 +14,7 @@ Currently implements:
 ## Installing the module ##
 
     panda update
-    panda --notests install FileSystem::Capacity::VolumesInfo
-
-    (I will resolve the travis test stuff to avoid --notests)
+    panda install FileSystem::Capacity::VolumesInfo
 
 ## Example Usage ##
     use v6;
