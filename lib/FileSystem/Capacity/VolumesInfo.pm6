@@ -1,6 +1,6 @@
 use v6;
 
-unit module Filesystem::Capacity::VolumesInfo;
+unit module FileSystem::Capacity::VolumesInfo;
 
 sub volumes-info ( Bool :$human = False ) is export {
   my %ret;
