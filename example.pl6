@@ -1,5 +1,9 @@
 use v6;
 use FileSystem::Capacity::VolumesInfo;
+use FileSystem::Capacity::DirSize;
+
+say "Volumes Capacity Info:";
+say "----------------------\n";
 
 say "Byte version:\n";
 
@@ -28,3 +32,12 @@ for %vols-human.sort(*.key)>>.kv -> ($location, $data) {
   say "Free: $data<free>";
   say "---";
 }
+
+say "\n\nDirectory Size of /bin:";
+say "----------------------\n";
+
+my $dir = "/bin";
+
+say " Byte version: " ~ dirsize($dir) ~ " bytes";
+say "Human version: " ~ dirsize($dir, :human) ~ "\n";
+

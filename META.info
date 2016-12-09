@@ -5,7 +5,8 @@
   "description" : "Provides filesystem capacity information.",
   "authors" : [ "Ramiro Encinas Alarza" ],
   "provides" : {
-    "FileSystem::Capacity::VolumesInfo" : "lib/FileSystem/Capacity/VolumesInfo.pm6"
+    "FileSystem::Capacity::VolumesInfo" : "lib/FileSystem/Capacity/VolumesInfo.pm6",
+    "lib/FileSystem/Capacity/VolumesInfo.pm6"
   },
   "depends" : [ ],
   "source-url" : "git@github.com:ramiroencinas/perl6-FileSystem-Capacity.git"

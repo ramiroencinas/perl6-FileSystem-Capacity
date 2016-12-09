@@ -3,19 +3,28 @@
 
 Provides filesystem capacity information.
 
-Currently implements filesystem volumes size and free space from:
+Currently implements:
+
+## Filesystem volumes size and free space: ##
 * GNU/Linux by df command.
 * Win32 by wmic command.
 * OS X by df command.
+
+## Size of given Directory: ##
+* GNU/Linux by du command.
 
 ## Installing the module ##
 
     panda update
     panda install FileSystem::Capacity
 
-## Example Usage to get the volumes size and free space with VolumesInfo ##
+## Example Usage: ##
     use v6;
     use FileSystem::Capacity::VolumesInfo;
+    use FileSystem::Capacity::DirSize;
+
+    say "Volumes Capacity Info:";
+    say "----------------------\n";
 
     say "Byte version:\n";
 
@@ -44,3 +53,11 @@ Currently implements filesystem volumes size and free space from:
       say "Free: $data<free>";
       say "---";
     }
+
+    say "\n\nDirectory Size of /bin:";
+    say "----------------------\n";
+
+    my $dir = "/bin";
+
+    say " Byte version: " ~ dirsize($dir) ~ " bytes";
+    say "Human version: " ~ dirsize($dir, :human) ~ "\n";

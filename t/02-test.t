@@ -2,8 +2,9 @@ use v6;
 use lib 'lib';
 use Test;
 use FileSystem::Capacity::VolumesInfo;
+use FileSystem::Capacity::DirSize;
 
-plan 2;
+plan 3;
 
 subtest {
 
@@ -31,4 +32,13 @@ subtest {
 	  like $data<used%>, /^\d ** 1..2\%/, "Used% is a percent";
 	  like $data<free>,  /\d+\s\w ** 2..5/, "Free is int, space and suffix";
 	}
+}
+
+subtest {
+
+	# dirsize, byte and human version	
+	my $dir = "/bin";
+
+	ok ( dirsize($dir) >= 0 ), "Size >= 0";
+	like dirsize($dir, :human), /^\d+\s\w ** 2..5/, "Size is int, space and suffix";
 }
