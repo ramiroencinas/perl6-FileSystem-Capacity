@@ -27,18 +27,23 @@ subtest {
 
 	for %vols-human.sort(*.key)>>.kv -> ($location, $data) {
 	  like $location, /^.+/, "Location have a character or more";
-	  like $data<size>,  /\d+\s\w ** 2..5/, "Size is int, space and suffix";
-	  like $data<used>,  /\d+\s\w ** 2..5/, "Used is int, space and suffix";
+	  like $data<size>,  /^\d+\.\d\d\s\w ** 2..5/, "Size is decimal, space and suffix";
+	  like $data<used>,  /^\d+\.\d\d\s\w ** 2..5/, "Used is decimal, space and suffix";
 	  like $data<used%>, /^\d ** 1..2\%/, "Used% is a percent";
-	  like $data<free>,  /\d+\s\w ** 2..5/, "Free is int, space and suffix";
+	  like $data<free>,  /^\d+\.\d\d\s\w ** 2..5/, "Free is decimal, space and suffix";
 	}
 }
 
 subtest {
 
 	# dirsize, byte and human version	
-	my $dir = "/bin";
+	my $dir;
+
+	given $*KERNEL {
+	  when /linux/ { $dir = '/bin' }
+	  when /win32/ { $dir = 'c:\windows' }
+	}
 
 	ok ( dirsize($dir) >= 0 ), "Size >= 0";
-	like dirsize($dir, :human), /^\d+\s\w ** 2..5/, "Size is int, space and suffix";
+	like dirsize($dir, :human), /^\d+\.\d\d\s\w ** 2..5/, "Size is decimal, space and suffix";
 }

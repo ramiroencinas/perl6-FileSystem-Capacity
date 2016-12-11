@@ -1,8 +1,9 @@
 use v6;
+use lib 'lib';
 use FileSystem::Capacity::VolumesInfo;
 use FileSystem::Capacity::DirSize;
 
-say "Volumes Capacity Info:";
+say "\nVolumes Capacity Info:";
 say "----------------------\n";
 
 say "Byte version:\n";
@@ -33,11 +34,15 @@ for %vols-human.sort(*.key)>>.kv -> ($location, $data) {
   say "---";
 }
 
-say "\n\nDirectory Size of /bin:";
-say "----------------------\n";
+my $dir;
 
-my $dir = "/bin";
+given $*KERNEL {
+  when /linux/ { $dir = '/bin' }
+  when /win32/ { $dir = 'c:\windows' }
+}
+
+say "\n\nDirectory Size of $dir:";
+say "-----------------\n";
 
 say " Byte version: " ~ dirsize($dir) ~ " bytes";
 say "Human version: " ~ dirsize($dir, :human) ~ "\n";
-

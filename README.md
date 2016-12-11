@@ -12,6 +12,7 @@ Currently implements:
 
 ## Size of given Directory: ##
 * GNU/Linux by du command.
+* Win32.
 
 ## Installing the module ##
 
@@ -54,10 +55,15 @@ Currently implements:
       say "---";
     }
 
-    say "\n\nDirectory Size of /bin:";
-    say "----------------------\n";
+    my $dir;
 
-    my $dir = "/bin";
+    given $*KERNEL {
+      when /linux/ { $dir = '/bin' }
+      when /win32/ { $dir = 'c:\windows' }
+    }
+
+    say "\n\nDirectory Size of $dir:";
+    say "-----------------\n";
 
     say " Byte version: " ~ dirsize($dir) ~ " bytes";
     say "Human version: " ~ dirsize($dir, :human) ~ "\n";
