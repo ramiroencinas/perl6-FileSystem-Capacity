@@ -1,5 +1,4 @@
 use v6;
-use lib 'lib';
 use FileSystem::Capacity::VolumesInfo;
 use FileSystem::Capacity::DirSize;
 
