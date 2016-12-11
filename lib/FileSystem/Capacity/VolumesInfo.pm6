@@ -3,7 +3,7 @@ use v6;
 unit module FileSystem::Capacity::VolumesInfo;
 
 sub volumes-info ( Bool :$human = False ) is export {
-  my %ret;
+  my %ret;  
   
   given $*KERNEL {
     when /linux/  { %ret = linux() }
@@ -12,9 +12,12 @@ sub volumes-info ( Bool :$human = False ) is export {
   }
   
   if $human {
+    
+    my $scale = 1024;
+
     for %ret.values -> $sizes {
       for $sizes{'size', 'used', 'free'} -> $size is rw {
-        $size = byte-to-human($size);
+        $size = byte-to-human($size, $scale);
       }
     }
   }
@@ -103,18 +106,18 @@ sub macos ( ) {
   }
 }
 
-sub byte-to-human( Int:D $bytes ) is export {
+sub byte-to-human( Int:D $bytes, Int:D $scale ) {
   if $bytes.chars > 27 { return "Fail! Must be < 27 positions"; }
 
   my $i = 0;
   my $b = $bytes;
 
-	my @scale = <Bytes KB MB GB TB PB EB ZB YB>;
+  my @scale = <Bytes KB MB GB TB PB EB ZB YB>;
 
-	while $b > 1024 {
-		$b = ($b / 1024).Int;
-		$i++;
-	}
+  while $b > $scale {
+    $b = ($b / $scale);
+    $i++;
+  }
 
-	return $b.round(0.10) ~ " " ~ @scale[$i];
+  return $b.round(0.01) ~ " " ~ @scale[$i];
 }
