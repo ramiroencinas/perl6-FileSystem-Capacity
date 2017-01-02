@@ -16,8 +16,8 @@ Currently implements:
 
 ## Installing the module ##
 
-    panda update
-    panda install FileSystem::Capacity
+    zef update
+    zef install FileSystem::Capacity
 
 ## Example Usage: ##
     use v6;
