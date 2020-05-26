@@ -29,7 +29,7 @@ sub dirsize ( Str:D $dirpath, :$human = False ) is export {
 
 sub linux ( Str:D $dirpath ) {
 
-  my @du-output = (run 'du', '-sb', $dirpath, :out).out.lines;
+  my @du-output = (run 'du', '-s', $dirpath, :out).out.lines;
 
   my @words = @du-output[0].words;
 
