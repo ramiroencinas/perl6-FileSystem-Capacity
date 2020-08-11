@@ -12,7 +12,7 @@ subtest {
 	my %vols = volumes-info();
 
 	for %vols.sort(*.key)>>.kv -> ($location, $data) {
-	  like $location, /^.+/, "Location have a character or more";
+	  like $location, /^.+/, "Location has a character or more";
 	  ok ($data<size> > 0), "Size > 0";
 	  ok ($data<used> >= 0), "Used >= 0";
 	  like $data<used%>, /^\d ** 1..3\%/, "Used% is a percent";
@@ -26,7 +26,7 @@ subtest {
 	my %vols-human = volumes-info(:human);
 
 	for %vols-human.sort(*.key)>>.kv -> ($location, $data) {
-	  like $location, /^.+/, "Location have a character or more";
+	  like $location, /^.+/, "Location has a character or more";
 	  like $data<size>,  /^\d+\s\w ** 2..5 || \d+\.\d ** 1..2\s\w ** 2..5/, "Size is int or decimal, space and suffix";
 	  like $data<used>,  /^\d+\s\w ** 2..5 || \d+\.\d ** 1..2\s\w ** 2..5/, "Used is int or decimal, space and suffix";
 	  like $data<used%>, /^\d ** 1..3\%/, "Used% is a percent";

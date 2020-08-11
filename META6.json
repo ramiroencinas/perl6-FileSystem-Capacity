@@ -2,7 +2,7 @@
   "perl" : "6.c",
   "name" : "FileSystem::Capacity",
   "license" : "Artistic-2.0",
-  "version" : "1.0.0",
+  "version" : "1.0.1",
   "description" : "Provides filesystem capacity information.",
   "authors" : [ "Ramiro Encinas Alarza" ],
   "provides" : {
@@ -10,5 +10,5 @@
   },
   "tags" : [ "filesystem", "utils" , "capacity"],
   "depends" : [ ],
-  "source-url" : "git@github.com:ramiroencinas/perl6-FileSystem-Capacity.git"
+  "source-url" : "https://github.com/ramiroencinas/perl6-FileSystem-Capacity.git"
 }
